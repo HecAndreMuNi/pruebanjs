@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+	<title>Node.js Notificador</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<style type="text/css">
+	body{
+		background: #333;
+		color: #333;
+		font-family: Helvetica, Arial;
+		font-size: 48px;
+		text-align: center;
+	}
+	form{
+		background: #CCC;
+		border-radius: 1em;
+		margin: 1em auto;
+		padding: 1em;
+		box-shadow: 0px 5px 5px rgba(0,0,0,0.5);
+		text-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+		width: 40%;
+	}
+	form input{
+		display: block;
+		font-size: 36px;
+		margin: 1em auto;
+		padding: 0.5em;
+		width: 70%;
+	}
+</style>
+<script>
+$(document).on("ready", iniciar);
+function iniciar{
+	var websocket = io.connect("http://localhost:6969");
+	websocket.on("nombreDesdeServidor", recibirMensaje)
+	$("#formulario").on("submit", enviarMensaje);
+}
+function enviarMensaje(){
+	websocket.emit("nuevoNombre", $("#nombre").val());
+	$("#nombre").fadeOut();
+}
+function recibirMensaje(datosServidor){
+	$("#formulario label").text("Acaba de entrar " + datosServidor);
+}
+</script>
+<script src="http://localhost:6969/socket.io/socket.io.js"></script>
+<body>
+	<form>
+		<label>¿Cuál es tu nombre?</label>
+		<input type="text" id="nombre" placeholder="Tu nombre completo" required />
+	</form>
+</body>
+</html>
